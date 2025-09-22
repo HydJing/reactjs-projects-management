@@ -9,7 +9,6 @@ function App() {
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined,
     projects: [],
-    tasks: [],
   });
 
   function handleAddTask(text) {
@@ -17,13 +16,16 @@ function App() {
       const taskId = Math.random();
       const newTask = {
         text: text,
-        projectId: prevState.selectedProjectId,
         id: taskId,
       };
 
       return {
         ...prevState,
-        tasks: [newTask, ...prevState.tasks],
+        projects: prevState.projects.map((project) =>
+          project.id === prevState.selectedProjectId
+            ? { ...project, tasks: [newTask, ...(project.tasks || [])] }
+            : project
+        ),
       };
     });
   }
@@ -32,7 +34,11 @@ function App() {
     setProjectsState((prevState) => {
       return {
         ...prevState,
-        tasks: prevState.tasks.filter((task) => task.id !== id),
+        projects: prevState.projects.map((project) =>
+          project.id === prevState.selectedProjectId
+            ? { ...project, tasks: project.tasks.filter((task) => task.id !== id) }
+            : project
+        ),
       };
     });
   }
@@ -70,6 +76,7 @@ function App() {
       const newProject = {
         ...projectData,
         id: projectId,
+        tasks: [],
       };
 
       return {
@@ -92,19 +99,7 @@ function App() {
     });
   }
 
-  const selectedProject = projectsState.projects.find(
-    (project) => project.id === projectsState.selectedProjectId
-  );
-
-  let content = (
-    <SelectedProject
-      project={selectedProject}
-      onDelete={handleDeleteProject}
-      onAddTask={handleAddTask}
-      onDeleteTask={handleDeleteTask}
-      tasks={projectsState.tasks}
-    />
-  );
+  let content;
 
   if (projectsState.selectedProjectId === null) {
     content = (
@@ -112,6 +107,20 @@ function App() {
     );
   } else if (projectsState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
+  } else {
+    const selectedProject = projectsState.projects.find(
+      (project) => project.id === projectsState.selectedProjectId
+    );
+
+    content = (
+      <SelectedProject
+        project={selectedProject}
+        onDelete={handleDeleteProject}
+        onAddTask={handleAddTask}
+        onDeleteTask={handleDeleteTask}
+        tasks={selectedProject.tasks}
+      />
+    );
   }
 
   return (
