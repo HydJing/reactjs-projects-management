@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 
 import Input from "./Input.jsx";
 import Modal from "./Modal.jsx";
+import ProjectsContext from "../store/projects-context.jsx";
 
-export default function NewProject({ onAdd, onCancel }) {
+export default function NewProject() {
+  const { addProject, cancelAddProject } = useContext(ProjectsContext);
   const modal = useRef();
   const [validationError, setValidationError] = useState({
     title: '',
@@ -37,7 +39,7 @@ export default function NewProject({ onAdd, onCancel }) {
       return;
     }
 
-    onAdd({
+    addProject({
       title: enteredTitle,
       description: enteredDescription,
       dueDate: enteredDueDate,
@@ -56,7 +58,7 @@ export default function NewProject({ onAdd, onCancel }) {
           <li>
             <button
               className="text-stone-800 hover:text-stone-950"
-              onClick={onCancel}
+              onClick={cancelAddProject}
             >
               Cancel
             </button>
