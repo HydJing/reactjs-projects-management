@@ -46,11 +46,14 @@ export default function NewProject() {
     });
   }
 
-  const errorMessage = Object.values(validationError).filter(Boolean).join(' ');
+  let errorMessage = '';
+  if (Object.values(validationError).some(Boolean)) {
+    errorMessage = 'Invalid input detected. Please check the following fields: ' + Object.keys(validationError).filter(key => validationError[key]).join(', ');
+  }
 
   return (
     <>
-      <Modal ref={modal} buttonCaption="Okay" title="Invalid Input" message={errorMessage || "Please make sure you provide a valid value for every input field."}>
+      <Modal ref={modal} buttonCaption="Okay" title="Invalid Input" message={errorMessage || "Please make sure you provide a valid value for every input field."} onClose={() => setValidationError({ title: '', description: '', dueDate: '' })}>
         
       </Modal>
       <div className="w-[35rem] mt-16">

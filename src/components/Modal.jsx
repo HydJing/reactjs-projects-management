@@ -1,9 +1,9 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 import Button from "./Button.jsx";
 
-const Modal = forwardRef(function Modal({ title, message, buttonCaption, children }, ref) {
+const Modal = forwardRef(function Modal({ title, message, buttonCaption, children, onClose }, ref) {
   const dialog = useRef();
 
   useImperativeHandle(ref, () => {
@@ -13,6 +13,19 @@ const Modal = forwardRef(function Modal({ title, message, buttonCaption, childre
       },
     };
   });
+
+  useEffect(() => {
+    const modal = dialog.current;
+    if (onClose) {
+      modal.addEventListener('close', onClose);
+    }
+
+    return () => {
+      if (onClose) {
+        modal.removeEventListener('close', onClose);
+      }
+    };
+  }, [onClose]);
 
   return createPortal(
     <dialog

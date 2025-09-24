@@ -22,12 +22,16 @@ function App() {
       (project) => project.id === selectedProjectId
     );
 
-    content = (
-      <SelectedProject
-        project={selectedProject}
-        tasks={selectedProject.tasks}
-      />
-    );
+    if (selectedProject) {
+      content = (
+        <SelectedProject
+          project={selectedProject}
+          tasks={selectedProject.tasks}
+        />
+      );
+    } else {
+      content = <NoProjectSelected />;
+    }
   }
 
   return (

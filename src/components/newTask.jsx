@@ -21,7 +21,7 @@ export default function NewTask({ onAdd }) {
 
   return (
     <>
-      <Modal ref={modal} buttonCaption="Okay" title="Invalid Input" message="Task cannot be empty.">
+      <Modal ref={modal} buttonCaption="Okay" title="Invalid Input" message="Please enter a valid task." onClose={() => setEnteredTask("")}>
         
       </Modal>
       <div className="flex items-center gap-4">

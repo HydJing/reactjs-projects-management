@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import Tasks from "./Tasks.jsx";
 import ProjectsContext from "../store/projects-context.jsx";
+import NoProjectSelected from "./NoProjectSelected.jsx";
 
 export default function SelectedProject({ project, tasks }) {
   const { deleteProject, addTask, deleteTask } = useContext(ProjectsContext);
 
   if (!project) {
-    return <p>Project not found.</p>; // Or handle this case differently
+    return <NoProjectSelected />;
   }
 
   const formattedDate = new Date(project.dueDate).toLocaleDateString("en-US", {

@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useReducer, useEffect } from 'react';
 
 const ProjectsContext = createContext({
   selectedProjectId: undefined,
@@ -12,9 +12,21 @@ const ProjectsContext = createContext({
   deleteProject: () => {},
 });
 
-const initialState = {
-  selectedProjectId: undefined,
-  projects: [],
+const getInitialState = () => {
+  const storedState = localStorage.getItem('projectsState');
+  const storedTimestamp = localStorage.getItem('projectsTimestamp');
+  const now = new Date().getTime();
+  const sevenDaysInMillis = 7 * 24 * 60 * 60 * 1000;
+
+  if (storedState && storedTimestamp) {
+    if (now - storedTimestamp < sevenDaysInMillis) {
+      return JSON.parse(storedState);
+    }
+  }
+  return {
+    selectedProjectId: undefined,
+    projects: [],
+  };
 };
 
 function projectsReducer(state, action) {
@@ -83,7 +95,12 @@ function projectsReducer(state, action) {
 }
 
 export function ProjectsContextProvider({ children }) {
-  const [projectsState, dispatch] = useReducer(projectsReducer, initialState);
+  const [projectsState, dispatch] = useReducer(projectsReducer, getInitialState());
+
+  useEffect(() => {
+    localStorage.setItem('projectsState', JSON.stringify(projectsState));
+    localStorage.setItem('projectsTimestamp', new Date().getTime());
+  }, [projectsState]);
 
   function handleAddTask(text) {
     dispatch({ type: 'ADD_TASK', payload: text });
