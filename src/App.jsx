@@ -9,17 +9,7 @@ import ProjectsContext from "./store/projects-context.jsx";
 function App() {
   const projectsCtx = useContext(ProjectsContext);
 
-  const {
-    selectedProjectId,
-    projects,
-    cancelAddProject,
-    addProject,
-    startAddProject,
-    deleteProject,
-    addTask,
-    deleteTask,
-    selectProject,
-  } = projectsCtx;
+  const { selectedProjectId, projects } = projectsCtx;
 
   let content;
 
