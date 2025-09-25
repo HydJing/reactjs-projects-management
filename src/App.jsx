@@ -11,12 +11,10 @@ function App() {
 
   const { selectedProjectId, projects } = projectsCtx;
 
-  let content;
+  let content = <NoProjectSelected />;
 
   if (selectedProjectId === null) {
     content = <NewProject />;
-  } else if (selectedProjectId === undefined) {
-    content = <NoProjectSelected />;
   } else {
     const selectedProject = projects.find(
       (project) => project.id === selectedProjectId
@@ -29,8 +27,6 @@ function App() {
           tasks={selectedProject.tasks}
         />
       );
-    } else {
-      content = <NoProjectSelected />;
     }
   }
 
